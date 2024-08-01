@@ -1,32 +1,32 @@
-import { MongoClient } from "mongodb";
-import { MONGODB_USER, MONGODB_PASSWORD, MONGODB_HOST, MONGODB_CLUSTER } from "$env/static/private";
+import postgres from "postgres";
+import { POSTGRES_DATABASE, POSTGRES_HOST, POSTGRES_PASSWORD, POSTGRES_USER } from "$env/static/private";
 import { dev } from "$app/environment";
 
-/*
-MONGODB_USER="qlmaadmin"
-MONGODB_PASSWORD="4sPQyLccHSTTuFlv"
-MONGODB_HOST="dseshhy.mongodb.net"
-MONGODB_CLUSTER="marketingappdev"
-MONGODB_REST_API_HOST="https://us-east-2.aws.data.mongodb-api.com/app/data-phjvpow/endpoint/data/v1/action/"
-MONGODB_REST_API_ENDPOINT="data-phjvpow"
-MONGODB_REST_API_KEY="RN9fuYP91dlcUylApD14FepRfqxmKHuUbsDWTwoOtbhgktYcZZidRRmPTDC4nYB1"
-*/
-
-const uri = `mongodb+srv://${MONGODB_USER}:${MONGODB_PASSWORD}@${MONGODB_CLUSTER}.${MONGODB_HOST}/?retryWrites=true&w=majority`;
-// const db_connection = new MongoClient(uri);
-
-let client;
-let clientCache;
+let client: any | undefined;
+let clientCache: any | undefined;
 
 if(dev) {
 
-	if(!clientCache) clientCache = new MongoClient(uri);
+	if(!clientCache) clientCache = postgres({
+		host: POSTGRES_HOST,
+		port: 5432,
+		database: POSTGRES_DATABASE,
+		password: POSTGRES_PASSWORD,
+		username: POSTGRES_USER,
+		ssl: (dev) ? "require" : true
+	});
 
 	client = clientCache;
 
 } else  {
 
-	client = new MongoClient(uri);
+	client = postgres({
+		host: POSTGRES_HOST,
+		port: 5432,
+		database: POSTGRES_DATABASE,
+		password: POSTGRES_PASSWORD,
+		username: POSTGRES_USER
+	});
 }
 
 export default client;

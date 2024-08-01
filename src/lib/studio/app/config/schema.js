@@ -1,6 +1,7 @@
 // Document types
 import { homeType } from "../schema/home";
 import { linkListType } from "$sanity/schema/linkList";
+import { fartType } from "../schema/farts";
 import { pageType } from "../schema/page";
 import { settingsType } from "../schema/settings";
 
@@ -18,6 +19,7 @@ const blocks = [
 ];
 
 const documents = [
+	fartType,
 	homeType,
 	linkListType,
 	pageType,

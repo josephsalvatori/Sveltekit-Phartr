@@ -1,20 +1,15 @@
-import { Google } from "arctic";
-import { Lucia, TimeSpan } from "lucia";
-import { MongodbAdapter } from "@lucia-auth/adapter-mongodb";
 import { dev } from "$app/environment";
-import { BASE_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from "$env/static/private";
-import type { Collection } from "mongodb";
-import type { UserDoc, SessionDoc } from "./database/schema";
-import client from "$lib/server/database/client";
+// import { Google } from "arctic";
+import { Lucia, TimeSpan } from "lucia";
+import { PostgresJsAdapter } from "@lucia-auth/adapter-postgresql";
+import client from "./database/client";
 
-let databaseConnection = await client;
-let database = dev ? "Development" : "Production";
-let db = databaseConnection.db(database);
+const sql = client;
 
-const User = db.collection("users") as Collection<UserDoc>;
-const Session = db.collection("sessions") as Collection<SessionDoc>;
-
-const adapter = new MongodbAdapter(Session, User);
+const adapter = new PostgresJsAdapter(sql, {
+	user: "user",
+	session: "user_session"
+});
 
 export const lucia = new Lucia(adapter, {
 	sessionCookie: {
@@ -51,7 +46,7 @@ declare module "lucia" {
 }
 
 interface DatabaseUserAttributes {
-	_id: string;
+	id: string;
 	auth_token: string;
 	billing?: {
 		id?: string | null;
@@ -75,6 +70,6 @@ interface DatabaseUserAttributes {
 	verified: boolean;
 }
 
-const googleRedirectUrl = dev ? "http://localhost:5173/oauth/google/callback" : `${BASE_URL}/oauth/google/callback`;
+// const googleRedirectUrl = dev ? "http://localhost:5173/oauth/google/callback" : `${BASE_URL}/oauth/google/callback`;
 
-export const googleOAuth = new Google(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, googleRedirectUrl);
+// export const googleOAuth = new Google(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, googleRedirectUrl);

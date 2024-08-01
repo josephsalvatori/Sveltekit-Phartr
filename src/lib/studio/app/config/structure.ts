@@ -17,6 +17,7 @@ export const structure = structureTool({
 					),
 				S.documentTypeListItem("page"),
 				S.divider(),
+				S.documentTypeListItem("farts"),
 				S.divider(),
 				S.documentTypeListItem("linkList"),
 				S.divider(),
