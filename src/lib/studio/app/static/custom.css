@@ -1,0 +1,17 @@
+/** Hide the "All Fields" tab in the field group tabs */
+div[data-testid="field-group-tabs"] > div:has(#all-fields-tab) {
+    display: none;
+}
+
+/** Style overwrites for the field group tabs */
+button[data-ui="Tab"] {
+	cursor: pointer;
+}
+
+form[data-ui="Box"] div[data-testid="field-groups"] {
+	border-bottom: 1px solid var(--card-border-color, #e0e0e0);
+}
+
+li[data-ui="Stack"] div[data-ui="Box"] hr {
+	margin: 15px 0;
+}
