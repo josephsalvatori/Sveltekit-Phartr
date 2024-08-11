@@ -26,3 +26,9 @@
 - Lifespan
     - Would there need to be management of any kind?
     - How long would the app be live, or is it in short service of the show?
+
+*---- Methods
+
+- Download the CMU Pronunciation Library
+- Parse to structured phonemic objects
+-
