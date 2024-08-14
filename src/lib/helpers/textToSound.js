@@ -1,4 +1,5 @@
 import Dataset from "$lib/config/cmu-dataset";
+import client from "$lib/server/database/client";
 
 export const textToIPA = (text) => {
 
@@ -9,11 +10,16 @@ export const textToIPA = (text) => {
 	return phoneticText;
 }
 
-export const textToPhonemes = async (text, octave = 3) => {
+export const textToPhonemes = async (text, octave = 5) => {
 
 	let phonemesText = "";
 	let phonemes = [];
 	let freqMultiplier = octaveRange[octave] ?? 8;
+	let freqLow = octaveFrequencyRanges[octave].lowFreq;
+	let freqHigh = octaveFrequencyRanges[octave].highFreq;
+	let freqStep = (freqHigh - freqLow) / 44;
+
+	console.log(freqLow, freqHigh, freqStep);
 
 	// remove non-alphanumeric characters, keep spaces
 	text = text.replace(/[^a-zA-Z ]/g, "");
@@ -22,23 +28,26 @@ export const textToPhonemes = async (text, octave = 3) => {
 	// TODO: keep some punctuation, like commas and periods
 
 	// split text into array of words
-	let words = text.split(" ");
+	let words = text.toUpperCase().split(" ");
+	let queryResults = await client`SELECT * FROM cmu_phonemes WHERE word IN ${client(words)}`;
 
 	// create phoneme object from word lookup
-	words.forEach((word) => {
+	words.forEach(async (word, i) => {
+
+		if(i > 0) phonemes.push([{ phoneme: " ", frequency: 0 }]);
 
 		let capital = word.toUpperCase();
-		let findWord = Dataset.json.find((entry) => entry.word === capital);
+		let findWord = queryResults.find((entry) => entry.word === capital);
 
 		if(findWord) {
 
 			findWord.phonemes.forEach((ph, k) => {
 
-				if(!phonemeFrequenceReference[ph.phoneme]) console.log("---", ph.phoneme, " MISSING");
+				if(!phonemeFrequencyReference[ph.phoneme]) console.log("---", ph.phoneme, " MISSING");
 
-				let freq = phonemeFrequenceReference[ph.phoneme] ?? 0;
-				
-				findWord.phonemes[k].frequency = freq * freqMultiplier;
+				let freq = phonemeFrequencyReference[ph.phoneme] ?? 0;
+
+				findWord.phonemes[k].frequency = freqLow + (freq * freqStep);
 			});
 
 			phonemes.push(findWord.phonemes);
@@ -52,7 +61,15 @@ export const textToPhonemes = async (text, octave = 3) => {
 
 		letters.forEach((letter) => {
 
-			phonemeArray.push(phonemeReference[letter]);
+			let letterPhoneme = phonemeReference[letter];
+
+			if(!phonemeFrequencyReference[letterPhoneme.phoneme]) console.log("---", letterPhoneme.phoneme, " MISSING");
+
+			let letterFreq = phonemeFrequencyReference[letterPhoneme.phoneme] ?? 0;
+
+			letterPhoneme.frequency = freqLow + (letterFreq * freqStep);
+
+			phonemeArray.push(letterPhoneme);
 		});
 
 		phonemes.push(phonemeArray);
@@ -63,8 +80,67 @@ export const textToPhonemes = async (text, octave = 3) => {
 
 // const dictionary = await fetch("CMU.parsed.json");
 // const dictionaryJson = await dictionary.json();
-const frequencyGraph = [
+// mezzo soprano frequncy range: 220 - 880 Hz
+// A3 = 220 hz
+// A4 = 440 hz
 
+const octaveFrequencyRanges = [
+	// bass
+	{
+		lowKey: "E2",
+		highKey: "E4",
+		lowFreq: 82.41,
+		highFreq: 329.63
+	},
+	// baritone
+	{
+		lowKey: "A2",
+		highKey: "A4",
+		lowFreq: 110.00,
+		highFreq: 440.00
+	},
+	// tenor
+	{
+		lowKey: "C3",
+		highKey: "C5",
+		lowFreq: 130.81,
+		highFreq: 523.25
+	},
+	// countertenor
+	{
+		lowKey: "E3",
+		highKey: "E5",
+		lowFreq: 164.81,
+		highFreq: 659.26
+	},
+	// contralto
+	{
+		lowKey: "F3",
+		highKey: "E5",
+		lowFreq: 174.61,
+		highFreq: 659.26
+	},
+	// mezzo soprano
+	{
+		lowKey: "A3",
+		highKey: "A5",
+		lowFreq: 220.00,
+		highFreq: 880.00
+	},
+	// soprano
+	{
+		lowKey: "C4",
+		highKey: "C6",
+		lowFreq: 261.63,
+		highFreq: 1046.50
+	},
+	// coloratura
+	{
+		lowKey: "D4",
+		highKey: "D6",
+		lowFreq: 293.66,
+		highFreq: 1174.66
+	},
 ];
 
 const octaveRange = [
@@ -132,7 +208,7 @@ const phonemeReference = {
 	Z: { phoneme: "ZH", stress: 0 }
 };
 
-const phonemeFrequenceReference = {
+const phonemeFrequencyReference = {
 	"AA": 44,
 	"AE": 44,
 	"AH": 44,
@@ -141,7 +217,9 @@ const phonemeFrequenceReference = {
 	"AY": 44,
 	"B": 44,
 	"CH": 44,
+	"D": 44,
 	"DH": 44,
+
 	"EH": 44,
 	"EY": 44,
 	"F": 44,
@@ -152,6 +230,7 @@ const phonemeFrequenceReference = {
 	"JH": 44,
 	"K": 44,
 	"L": 44,
+
 	"M": 44,
 	"N": 44,
 	"NG": 44,
@@ -162,6 +241,7 @@ const phonemeFrequenceReference = {
 	"R": 44,
 	"S": 44,
 	"SH": 44,
+
 	"T": 44,
 	"TH": 44,
 	"UH": 44,

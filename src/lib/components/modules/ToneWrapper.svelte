@@ -18,10 +18,18 @@ let toneObject = writable({
 let ctx = setContext("toneWrapper", toneObject);
 
 </script>
-
-
-<div class="container">
-	<h3 class="py-4">{@html $toneObject.text ?? `&nbsp;`}</h3>
+<div class="container grid gap-4 py-8">
+	<h2 class="font-bold text-5xl">
+		{#if $toneObject.phonemes.length > 0}
+			{#each $toneObject.phonemes as array}
+				{#each array as object}
+					<span>{@html (object?.phoneme !== "" ? object.phoneme : "&nbsp;")}</span>
+				{/each}
+			{/each}
+		{:else}
+			{@html $toneObject.text ?? `&nbsp;`}
+		{/if}
+	</h2>
 
 	<div>
 		<!-- SIRI visualization -->
@@ -45,7 +53,7 @@ let ctx = setContext("toneWrapper", toneObject);
 	<Tone />
 
 	{#if dev}
-		<div>
+		<div class="">
 			<SuperDebug data={ctx} />
 		</div>
 	{/if}

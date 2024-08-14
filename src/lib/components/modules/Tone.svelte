@@ -7,13 +7,19 @@ import AudioKeys from "audiokeys";
 import * as Tone from "tone";
 
 let audioPlayer = {};
-let keyboard = new AudioKeys({
-	rows: 2
-});
-let sounds = {};
+// let keyboard = new AudioKeys({
+// 	rows: 2
+// });
 
 let wrapper = getContext("toneWrapper");
 let i = 0;
+
+/**
+ * Sounds
+ */
+const sounds = {
+	"E4": "/assets/1177.wav"
+};
 
 /**
  * Events
@@ -77,15 +83,15 @@ onMount(async() => {
 
 		audioPlayer.analysers.push(audioPlayer.analyser);
 
-		keyboard.down((note) => {
-			$wrapper.audio.sequence.push(note);
-			$wrapper = $wrapper;
-		});
+		// keyboard.down((note) => {
+		// 	$wrapper.audio.sequence.push(note);
+		// 	$wrapper = $wrapper;
+		// });
 
-		keyboard.up((note) => {
+		// keyboard.up((note) => {
 
-			console.log("up note", note);
-		});
+		// 	console.log("up note", note);
+		// });
 	}
 });
 </script>

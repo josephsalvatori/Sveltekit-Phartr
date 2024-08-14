@@ -24,3 +24,10 @@ CREATE TABLE IF NOT EXISTS "user_session" (
     expires_at TIMESTAMPTZ NOT NULL,
     user_id TEXT NOT NULL REFERENCES "user" ("id")
 );
+
+CREATE TABLE IF NOT EXISTS "cmu_phonemes" (
+    id TEXT PRIMARY KEY,
+    word TEXT NOT NULL,
+	phonemes JSON NOT NULL,
+	syllables JSON NOT NULL
+);

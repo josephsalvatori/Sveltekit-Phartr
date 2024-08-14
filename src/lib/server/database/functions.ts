@@ -3,6 +3,7 @@ import client from "$lib/server/database/client";
 import { ObjectId } from "mongodb";
 import type { UserDoc } from "./schema";
 
+// TODO: REWRITE FOR POSTGRES
 let environment = dev ? "Development" : "Production";
 
 export const getUserByEmail = async (email: string): Promise<UserDoc | null> => {
