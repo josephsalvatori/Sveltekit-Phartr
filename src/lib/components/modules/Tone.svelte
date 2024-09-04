@@ -3,7 +3,7 @@ import { dev } from "$app/environment";
 import { getContext, onMount, setContext } from "svelte";
 import Button from "$lib/components/ui/button/button.svelte";
 import SuperDebug from "sveltekit-superforms";
-import AudioKeys from "audiokeys";
+// import AudioKeys from "audiokeys";
 import SiriWave from "siriwave";
 import * as Tone from "tone";
 
