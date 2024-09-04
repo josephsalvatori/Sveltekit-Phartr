@@ -15,12 +15,11 @@ export const actions = {
 		const data = await request.formData();
 
 		let text = data.get("text");
-
-		console.log(text);
-
 		let phonemes = await textToPhonemes(text);
 
-		console.log("phonemes", phonemes);
+		if(!phonemes) {
+			return { success: false, error: "No phonemes found" };
+		}
 
 		return { success: true, phonemes: phonemes };
 	}

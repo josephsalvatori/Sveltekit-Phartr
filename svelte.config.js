@@ -1,6 +1,6 @@
 // import adapter from "@sveltejs/adapter-auto";
 import adapter from "@sveltejs/adapter-vercel";
-import preprocess from "svelte-preprocess";
+import { sveltePreprocess} from "svelte-preprocess";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
@@ -21,12 +21,12 @@ const config = {
 			relative: false
 		},
 		prerender: {
-			crawl: true,
+			crawl: false,
 			entries: []
 		}
 	},
 	preprocess: [
-		preprocess({
+		sveltePreprocess({
 			postcss: join(__dirname, "postcss.config.cjs"),
 			preserve: ["ld+json"]
 		})
