@@ -29,7 +29,18 @@ export const textToPhonemes = async (text, octave = 5) => {
 
 	// split text into array of words
 	let words = text.toUpperCase().split(" ");
-	let queryResults = await client`SELECT * FROM cmu_phonemes WHERE word IN ${client(words)}`;
+	let queryResults;
+
+	try {
+
+		queryResults = await client`SELECT * FROM cmu_phonemes WHERE word IN ${client(words)}`;
+
+	} catch(e) {
+
+		console.error(e);
+
+		return { success: false, error: "Database error", message: e.message };
+	}
 
 	// create phoneme object from word lookup
 	words.forEach(async (word, i) => {
