@@ -25,7 +25,8 @@ if(dev) {
 		port: 5432,
 		database: POSTGRES_DATABASE,
 		password: POSTGRES_PASSWORD,
-		username: POSTGRES_USER
+		username: POSTGRES_USER,
+		ssl: true
 	});
 }
 
