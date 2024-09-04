@@ -34,7 +34,7 @@ export const textToPhonemes = async (text, octave = 5) => {
 	// create phoneme object from word lookup
 	words.forEach(async (word, i) => {
 
-		if(i > 0) phonemes.push([{ phoneme: " ", frequency: 0 }]);
+		// if(i > 0) phonemes.push([{ phoneme: " ", frequency: 0 }]);
 
 		let capital = word.toUpperCase();
 		let findWord = queryResults.find((entry) => entry.word === capital);
@@ -65,7 +65,7 @@ export const textToPhonemes = async (text, octave = 5) => {
 
 			if(!phonemeFrequencyReference[letterPhoneme.phoneme]) console.log("---", letterPhoneme.phoneme, " MISSING");
 
-			let letterFreq = phonemeFrequencyReference[letterPhoneme.phoneme] ?? 0;
+			let letterFreq = phonemeFrequencyReference[letterPhoneme.phoneme] ?? null;
 
 			letterPhoneme.frequency = freqLow + (letterFreq * freqStep);
 
@@ -210,45 +210,45 @@ const phonemeReference = {
 
 const phonemeFrequencyReference = {
 	"AA": 44,
-	"AE": 44,
-	"AH": 44,
-	"AO": 44,
-	"AW": 44,
-	"AY": 44,
-	"B": 44,
-	"CH": 44,
-	"D": 44,
-	"DH": 44,
+	"AE": 43,
+	"AH": 42,
+	"AO": 41,
+	"AW": 40,
+	"AY": 39,
+	"B": 38,
+	"CH": 37,
+	"D": 36,
+	"DH": 35,
 
-	"EH": 44,
-	"EY": 44,
-	"F": 44,
-	"G": 44,
-	"HH": 44,
-	"IH": 44,
-	"IY": 44,
-	"JH": 44,
-	"K": 44,
-	"L": 44,
+	"EH": 34,
+	"EY": 33,
+	"F": 32,
+	"G": 31,
+	"HH": 30,
+	"IH": 29, // i:
+	"IY": 28, // d3
+	"JH": 27,
+	"K": 26,
+	"L": 25,
 
-	"M": 44,
-	"N": 44,
-	"NG": 44,
-	"OW": 44,
-	"OY": 44,
-	"P": 44,
-	"Q": 44,
-	"R": 44,
-	"S": 44,
-	"SH": 44,
+	"M": 24,
+	"N": 23,
+	"NG": 22,
+	"OW": 21,
+	"OY": 20,
+	"P": 19,
+	"Q": 18,
+	"R": 17,
+	"S": 16,
+	"SH": 15,
 
-	"T": 44,
-	"TH": 44,
-	"UH": 44,
-	"UW": 44,
-	"V": 44,
-	"W": 44,
-	"Y": 44,
-	"Z": 44,
-	"ZH": 44,
+	"T": 14,
+	"TH": 13,
+	"UH": 12,
+	"UW": 11,
+	"V": 10, // v
+	"W": 9,
+	"Y": 8,
+	"Z": 7, // z
+	"ZH": 6,
 };

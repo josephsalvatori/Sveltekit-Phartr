@@ -7,6 +7,7 @@ import { Input } from "$lib/components/ui/input";
 import { Label } from "$lib/components/ui/label";
 import Tone from "$lib/components/modules/Tone.svelte";
 import SuperDebug from "sveltekit-superforms";
+import { afterNavigate } from "$app/navigation";
 // import { textToPhonemes } from "$lib/helpers/textToSound";
 
 let toneObject = writable({
@@ -16,7 +17,11 @@ let toneObject = writable({
 	visual: {}
 });
 let ctx = setContext("toneWrapper", toneObject);
+let wordReady = false;
 
+afterNavigate(() => {
+
+})
 </script>
 <div class="container grid gap-4 py-8">
 	<h2 class="font-bold text-5xl">
@@ -38,19 +43,23 @@ let ctx = setContext("toneWrapper", toneObject);
 	<div class="">
 		<form method="POST" use:enhance={({ formElement, formData, action, cancel, submitter }) => {
 
+			wordReady = false;
+
 			return async ({ result, update }) => {
 
 				$toneObject.phonemes = result.data.phonemes;
 
-				// `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
+				wordReady = true;
+
+				update();
 			};
 		}}>
-			<Label for="tti">Enter some stuff</Label>
-			<Input id="tti" type="text" name="text" bind:value={$toneObject.text} placeholder="Enter text to fart" />
+			<Label for="tti">Type something</Label>
+			<Input id="tti" type="text" name="text" autofocus bind:value={$toneObject.text} placeholder="Enter text to fart" />
+
+			<Tone ready={wordReady} />
 		</form>
 	</div>
-
-	<Tone />
 
 	{#if dev}
 		<div class="">
